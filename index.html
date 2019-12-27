@@ -61,6 +61,7 @@
     
     <script>
         const zeroOutTime = (date) => {
+            // go to midnight
             date.setHours(0, 0, 0, 0);
             return date
         }
@@ -90,8 +91,30 @@
 
             const locale = undefined // leave it up to the browser
 
-            const formatOptions = {
+            let formatOptions = {
                 weekday: "long",
+            }
+
+            if (number_of_eves > 7) {
+                formatOptions = {
+                    month: "short",
+                    weekday: "long",
+                    day: "numeric",
+                }
+            }
+            if (number_of_eves > 30) {
+                formatOptions = {
+                    month: "long",
+                    weekday: "short",
+                    day: "numeric",
+                }
+            }
+            if (now.getFullYear() != date.getFullYear()){
+                formatOptions = {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                }
             }
 
             let text = `Happy ${ date.toLocaleDateString(locale, formatOptions) } ${ "Eve ".repeat(number_of_eves).trim() }`
@@ -131,7 +154,7 @@
             }
         }
 
-        // use the first date foundg
+        // use the first date found
         date = datesAccumulator[0]
 
         if (!date || now > date) {
