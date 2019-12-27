@@ -18,11 +18,11 @@
             justify-content:center;
             align-items:center;
             margin: 0 1em;
+            margin-top:20vh;
         }
 
         #day_statement {
             font-weight: 300;
-            margin-top:20vh;
         }
 
         /*Small devices (landscape phones, 576px and up)*/
@@ -85,6 +85,8 @@
         date = datesAccumulator[0]
 
         if (!date || now > date) {
+            console.error("No valid date found!")
+
             // find next friday
             tmp = new Date(now)
             const FRIDAY = 5
