@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Eve Countdown</title>
+    <link href="https://fonts.googleapis.com/css?family=Niramit:300,400&display=swap" rel="stylesheet">
+    <style>
+        body{
+            font-family: 'Niramit', sans-serif;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin: 0 1em;
+        }
+
+        #day_statement {
+            font-weight: 300;
+            margin-top:20vh;
+        }
+
+        /*Small devices (landscape phones, 576px and up)*/
+        @media (min-width: 576px) {
+            #day_statement{
+                font-size: 2.5em;
+            }
+        }
+
+        /* Medium devices (tablets, 768px and up)*/
+        @media (min-width: 768px) {
+            #day_statement{
+                font-size: 2.8em;
+            }
+        }
+
+        /* Large devices (desktops, 992px and up)*/
+        @media (min-width: 992px) {
+            #day_statement{
+                font-size: 3em;
+            }
+        }
+
+        /* Extra large devices (large desktops, 1200px and up)*/
+        @media (min-width: 1200px) {
+            #day_statement{
+                font-size: 3.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="day_statement">Eve Countdown<h1>
+    </div>
+    
+    <script>
+        const zeroOutTime = (date) => {
+            date.setHours(0, 0, 0, 0);
+            return date
+        }
+
+        const getNumberOfEves = (now, dates) => {
+            //console.log(now, date)
+
+            let number_of_eves = 0
+            
+            let tmp = new Date(now)
+            
+            while (tmp.getTime() < date.getTime()) {
+                tmp.setDate(tmp.getDate() + 1) // increment tmp one day
+
+                number_of_eves += 1
+
+                //console.log(tmp, date)
+            }
+
+            return number_of_eves
+        }
+
+        const getString = (now, date) => {
+            //console.log(now, date)
+
+            let number_of_eves = getNumberOfEves(now, date)
+
+            const locale = undefined // leave it up to the browser
+
+            const formatOptions = {
+                weekday: "long",
+            }
+
+            let text = `Happy ${ date.toLocaleDateString(locale, formatOptions) } ${ "Eve ".repeat(number_of_eves).trim() }`
+            console.log(text)
+
+            return text
+        }
+
+        const update = () => {
+            now = zeroOutTime(new Date())
+
+            const text = getString(now, date)
+
+            document.getElementById("day_statement").innerText = text
+
+            document.title = text
+        }
+
+        let now  = new Date()
+        let date = null
+
+        // Retrieve from window.location
+        const url = new URL(window.location);
+
+        // Retrieve params via url.search
+        const params = new URLSearchParams(url.search);
+        
+        // look for a date under any key
+        let datesAccumulator = []
+        for (const [key, value] of params) {
+            //console.log(key, value)
+
+            let parsedDate = new Date(value)
+
+            if (!isNaN(parsedDate)){
+                datesAccumulator.push(parsedDate)
+            }
+        }
+
+        // use the first date foundg
+        date = datesAccumulator[0]
+
+        if (!date || now > date) {
+            // find next friday
+            tmp = new Date(now)
+            const FRIDAY = 5
+            while (tmp.getDay() != FRIDAY) {
+                tmp.setDate(tmp.getDate() + 1) // move forward one day
+            }
+
+            date = tmp
+        }
+
+        date = zeroOutTime(date)
+        now  = zeroOutTime(now)
+
+        //setInterval(update, 500)
+        update()
+    </script>
+</body>
+</html>
