@@ -17,63 +17,38 @@
             display:flex;
             justify-content:center;
             align-items:center;
-            margin: 0 1rem;
-            flex-direction: column;
+            margin: 0 1em;
         }
 
-        #title {
+        #day_statement {
             font-weight: 300;
             margin-top:20vh;
-            font-size: 1.5em;
-        }
-
-        #date_form{
-            margin-top:2rem;
-            font-size:0.5em;
-            line-height:2;
-        }
-
-        #date_input{
-            font-size: 1em;
-            font-family:inherit;
-        }
-
-        button{
-            font-size: 1em;
-            font-family:inherit;
-            background: linear-gradient(#fefefe, #eee);
-            border-radius: 4px;
-        }
-
-        button:active{
-            background: linear-gradient(#afafaf, #aaa);
-            border-radius: 4px;
         }
 
         /*Small devices (landscape phones, 576px and up)*/
         @media (min-width: 576px) {
-            .container{
+            #day_statement{
                 font-size: 2.5em;
             }
         }
 
         /* Medium devices (tablets, 768px and up)*/
         @media (min-width: 768px) {
-            .container{
+            #day_statement{
                 font-size: 2.8em;
             }
         }
 
         /* Large devices (desktops, 992px and up)*/
         @media (min-width: 992px) {
-            .container{
+            #day_statement{
                 font-size: 3em;
             }
         }
 
         /* Extra large devices (large desktops, 1200px and up)*/
         @media (min-width: 1200px) {
-            .container{
+            #day_statement{
                 font-size: 3.5em;
             }
         }
@@ -81,17 +56,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="title">Eve Countdown</h1>
-        <form action="app.html" method="get" id="date_form">
-            Input a date:<br/>
-            <input type="date" name="date" id="date_input">
-
-            <!-- Its tricky to css
-                <input type="submit">
-            -->
-
-            <button onclick="this.form.submit()">Submit</button>
-        </form>
+        <h1 id="day_statement">Eve Countdown</h1>
     </div>
     
     <script>
@@ -116,7 +81,7 @@
             }
         }
 
-        // use the first date foundg
+        // use the first date found
         date = datesAccumulator[0]
 
         if (!date || now > date) {
@@ -135,12 +100,79 @@
             date.setHours(0, 0, 0, 0);
             return date
         }
+
+        const getNumberOfEves = (now, dates) => {
+            //console.log(now, date)
+
+            let number_of_eves = 0
+            
+            let tmp = new Date(now)
+            
+            while (tmp.getTime() < date.getTime()) {
+                tmp.setDate(tmp.getDate() + 1) // increment tmp one day
+
+                number_of_eves += 1
+
+                //console.log(tmp, date)
+            }
+
+            return number_of_eves
+        }
+
+        const getString = (now, date) => {
+            //console.log(now, date)
+
+            let number_of_eves = getNumberOfEves(now, date)
+
+            const locale = undefined // leave it up to the browser
+
+            let formatOptions = {
+                weekday: "long",
+            }
+
+            if (number_of_eves > 7) {
+                formatOptions = {
+                    month: "short",
+                    weekday: "long",
+                    day: "numeric",
+                }
+            }
+            if (number_of_eves > 30) {
+                formatOptions = {
+                    month: "long",
+                    weekday: "short",
+                    day: "numeric",
+                }
+            }
+            if (now.getFullYear() != date.getFullYear()){
+                formatOptions = {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                }
+            }
+
+            let text = `Happy ${ date.toLocaleDateString(locale, formatOptions) } ${ "Eve ".repeat(number_of_eves).trim() }`
+            console.log(text)
+
+            return text
+        }
+
+        const update = () => {
+            now = zeroOutTime(new Date())
+
+            const text = getString(now, date)
+
+            document.getElementById("day_statement").innerText = text
+
+            document.title = text
+        }
+
         date = zeroOutTime(date)
         now  = zeroOutTime(now)
 
-
         //setInterval(update, 500)
-        document.getElementById("date_input").value = date.toLocaleDateString()
+        update()
     </script>
 </body>
 </html>
