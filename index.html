@@ -19,6 +19,7 @@
             align-items:center;
             margin: 0 1rem;
             margin-top:20vh;
+            font-size: 1.8em;
             flex-direction: column;
         }
 
@@ -39,14 +40,19 @@
             font-family:inherit;
         }
 
-        button{
+        #err{
+            color:red;
+            font-size:1rem;
+        }
+
+        input[type="submit"]{
             font-size: 1em;
             font-family:inherit;
             background: linear-gradient(#fefefe, #eee);
             border-radius: 4px;
         }
 
-        button:active{
+        input[type="submit"]:active{
             background: linear-gradient(#afafaf, #aaa);
             border-radius: 4px;
         }
@@ -83,16 +89,13 @@
 <body>
     <div class="container">
         <h1 id="title">Eve Countdown</h1>
-        <form action="app.html" method="get" id="date_form">
+        <form action="app.html" method="get" id="date_form" onsubmit="return verifyDate(event)">
             Input a date:<br/>
-            <input type="date" name="date" id="date_input">
+            <input type="date" name="date" id="date_input" required>
 
-            <!-- Its tricky to css
-                <input type="submit">
-            -->
-
-            <button onclick="this.form.submit()">Submit</button>
+            <input type="submit"/>
         </form>
+        <span id="err"></span>
     </div>
     
     <script>
@@ -139,9 +142,36 @@
         date = zeroOutTime(date)
         now  = zeroOutTime(now)
 
-
         //setInterval(update, 500)
-        document.getElementById("date_input").value = date.toLocaleDateString()
+        document.getElementById("date_input").value = date.toISOString().slice(0, 10)
+
+        const verifyDate = (event) => {
+            let inputtedDate = document.getElementById("date_input").value
+            let parsedDate = new Date(inputtedDate)
+            const err = document.getElementById("err")
+            now  = zeroOutTime(new Date())
+            
+            if (isNaN(parsedDate) || now > parsedDate) {
+                event.preventDefault()
+
+                let errorMsg = "invalid date!"
+                err.style.color = "red"
+
+                if (now > parsedDate){
+                    errorMsg = "The chosen date has already passed"
+                    err.style.color = "orange"
+                }
+
+                console.error(errorMsg)
+                
+                err.innerText = errorMsg
+
+                err.hidden = false
+
+                return false
+            }
+            err.hidden = true
+        }
     </script>
 </body>
 </html>
