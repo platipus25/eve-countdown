@@ -3,9 +3,8 @@
 A simple web page that calculates the number of eves to a date.
 
 ### Usage:
-Put a date into the search section of the url under any key
+The landing page has a form that passes a date using a GET request. Enter a date on the landing page, and it will redirect you to `app.html`.
 
-If none can be found, it will use next friday.
-
-Example:
-`/index.html?date=9/12/20`
+### Examples:
+On a Monday it would be:
+> Happy Friday Eve Eve Eve Eve
