@@ -155,6 +155,7 @@
                 event.preventDefault()
 
                 let errorMsg = "invalid date!"
+                err.style.color = "red"
 
                 if (now > parsedDate){
                     errorMsg = "The chosen date has already passed"
