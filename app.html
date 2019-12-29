@@ -82,7 +82,7 @@
         for (const [key, value] of params) {
             //console.log(key, value)
 
-            let parsedDate = new Date(value)
+            let parsedDate = moment(value).toDate()
 
             if (!isNaN(parsedDate)){
                 datesAccumulator.push(parsedDate)
