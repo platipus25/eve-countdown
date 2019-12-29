@@ -60,6 +60,7 @@
         <h1 id="day_statement">Eve Countdown</h1>
     </div>
     
+    <script src="moment.js"></script>
     <script>
 
         const zeroOutTime = (date) => {
@@ -146,33 +147,20 @@
 
             const locale = undefined // leave it up to the browser
 
-            let formatOptions = {
-                weekday: "long",
-            }
+            let format = "dddd"
 
             if (number_of_eves > 7) {
-                formatOptions = {
-                    month: "short",
-                    weekday: "long",
-                    day: "numeric",
-                }
-            }
-            if (number_of_eves > 30) {
-                formatOptions = {
-                    month: "long",
-                    weekday: "short",
-                    day: "numeric",
-                }
-            }
-            if (now.getFullYear() != date.getFullYear()){
-                formatOptions = {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                }
+                format = "dddd MMM Do"
             }
 
-            let text = `Happy ${ date.toLocaleDateString(locale, formatOptions) } ${ "Eve ".repeat(number_of_eves).trim() }`
+            if (number_of_eves > 30) {
+                format = "ddd, MMMM Do"
+            }
+            if (now.getFullYear() != date.getFullYear()){
+                format = "ddd, MMM Do YYYY"
+            }
+
+            let text = `Happy ${ moment(date).format(format) } ${ "Eve ".repeat(number_of_eves).trim() }`
             console.log(text)
 
             return text
